@@ -1,0 +1,3 @@
+import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
+export default function SectionHeading({eyebrow,title,description,link,label}){return <div className="mb-7 flex flex-wrap items-end justify-between gap-4"><div>{eyebrow&&<p className="eyebrow mb-2">{eyebrow}</p>}<h2 className="section-title">{title}</h2>{description&&<p className="mt-2 text-sm text-gray-500">{description}</p>}</div>{link&&<Link to={link} className="inline-flex items-center gap-2 text-xs font-semibold text-gray-600 hover:text-orange-600">{label||'Explore all'}<ArrowUpRight size={15}/></Link>}</div>;}

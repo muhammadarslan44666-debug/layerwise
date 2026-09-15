@@ -1,0 +1,3 @@
+import { Activity, AlignJustify, ArrowRight, BookOpen, Cable, CircleDot, Coins, Droplets, Gauge, Layers, MoveHorizontal, MoveVertical, Printer, Ruler, ScanLine, ScanSearch, SlidersHorizontal, Spline, Thermometer, Unplug, Waves, Waypoints } from 'lucide-react';
+const icons={Activity,AlignJustify,ArrowRight,BookOpen,Cable,CircleDot,Coins,Droplets,Gauge,Layers,MoveHorizontal,MoveVertical,Printer,Ruler,ScanLine,ScanSearch,SlidersHorizontal,Spline,Thermometer,Unplug,Waves,Waypoints};
+export default function Icon({name,...props}){const Component=icons[name]||Layers;return <Component {...props}/>;}

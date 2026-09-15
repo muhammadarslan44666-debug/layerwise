@@ -1,0 +1,3 @@
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+export default function useCatalog(){const printers=useQuery({queryKey:['printers'],queryFn:()=>base44.entities.Printer.list('manufacturer',100),staleTime:300000});const filaments=useQuery({queryKey:['filaments'],queryFn:()=>base44.entities.Filament.list('material',100),staleTime:300000});return {printers:printers.data||[],filaments:filaments.data||[],loading:printers.isLoading||filaments.isLoading,error:printers.error||filaments.error};}

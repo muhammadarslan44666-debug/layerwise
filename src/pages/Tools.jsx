@@ -1,0 +1,4 @@
+import PageIntro from '@/components/shared/PageIntro';
+import ToolCard from '@/components/cards/ToolCard';
+import { tools } from '@/components/data/tools';
+export default function Tools(){return <div className="container-page py-10 pb-20"><PageIntro eyebrow="THE CALIBRATION WORKBENCH" title="Tools with a purpose." description="Eight focused tools to plan a test, understand a measurement, and make a better-informed adjustment. No universal presets. No hidden assumptions."/><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{tools.map(t=><ToolCard key={t.slug} tool={t}/>)}</div><div className="mt-8 rounded-xl bg-gray-50 p-6 text-sm leading-7 text-gray-500">Temperature and retraction generators create downloadable test schedules. Create the printable model in your slicer’s native calibration tool. We do not generate machine-ready G-code.</div></div>;}

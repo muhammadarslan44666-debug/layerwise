@@ -1,0 +1,14 @@
+export const sources = {
+ stringing: { title: 'Prusa · Stringing and oozing', url: 'https://help.prusa3d.com/article/stringing-and-oozing_1805', type: 'Manufacturer', scope: 'Causes, filament condition and retraction checks; model-specific values are not generalized.' },
+ flow: { title: 'OrcaSlicer · Flow ratio calibration', url: 'https://github.com/OrcaSlicer/OrcaSlicer/wiki/flow_ratio_calib', type: 'Open-source documentation', scope: 'Flow symptoms, YOLO additive formula and legacy 2-pass percentage formula.' },
+ temperature: { title: 'OrcaSlicer · Temperature calibration', url: 'https://github.com/OrcaSlicer/OrcaSlicer/wiki/temp_calib', type: 'Open-source documentation', scope: 'Temperature tower generation and visual interpretation.' },
+ retraction: { title: 'OrcaSlicer · Retraction test', url: 'https://github.com/OrcaSlicer/OrcaSlicer/wiki/retraction_calib', type: 'Open-source documentation', scope: 'Start/end/increment test and shortest clean retraction interpretation.' },
+ pressure: { title: 'Klipper · Pressure advance', url: 'https://www.klipper3d.org/Pressure_Advance.html', type: 'Open-source documentation', scope: 'Klipper tuning tower only: start + measured height × factor. Not interchangeable with other firmware.' },
+ first: { title: 'Prusa · First layer calibration (i3)', url: 'https://help.prusa3d.com/article/first-layer-calibration-i3_112364', type: 'Manufacturer', scope: 'Visual signs of nozzle distance. Menu instructions and offset signs apply only to listed Prusa models.' },
+ warping: { title: 'Prusa · Warping', url: 'https://help.prusa3d.com/article/warping_2011', type: 'Manufacturer', scope: 'Thermal contraction, adhesion, cooling and ambient-condition checks.' },
+ shifting: { title: 'Prusa · Layer shifting', url: 'https://help.prusa3d.com/article/layer-shifting_2020', type: 'Manufacturer', scope: 'Axis identification, belts, pulleys and obstruction checks; service procedures are model-specific.' },
+ bridging: { title: 'Prusa · Poor bridging', url: 'https://help.prusa3d.com/article/poor-bridging_1802', type: 'Manufacturer', scope: 'Sagging, bridge flow, cooling, speed and orientation.' },
+ materials: { title: 'Prusa · Filament material guide', url: 'https://help.prusa3d.com/materials', type: 'Manufacturer', scope: 'Material-family reference. Not a substitute for your specific filament technical data sheet.' },
+ orca: { title: 'OrcaSlicer · Official documentation', url: 'https://github.com/OrcaSlicer/OrcaSlicer/wiki', type: 'Open-source documentation', scope: 'Slicer settings, printer selection and calibration tools.' }
+};
+export const checkedDate = '2026-09-09';

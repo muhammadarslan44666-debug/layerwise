@@ -1,0 +1,2 @@
+import { Link } from 'react-router-dom';
+export default function NotFound(){return <div className="container-page py-24 text-center"><p className="eyebrow">404 · NOT ON THIS BUILD PLATE</p><h1 className="mt-4 font-heading text-3xl font-bold">We couldn’t find that page.</h1><p className="body-copy mt-4">Try a problem, a tool, or a printer reference instead.</p><Link to="/" className="button-primary mt-8">Back to the workbench</Link></div>;}
