@@ -1,10 +1,66 @@
-import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Info, ArrowLeft } from 'lucide-react';
-import PageIntro from '@/components/shared/PageIntro';
-import SourcePanel from '@/components/shared/SourcePanel';
-import ToolForm from '@/components/tools/ToolForm';
-import ToolResult from '@/components/tools/ToolResult';
-import { tools } from '@/components/data/tools';
-import NotFound from '@/pages/NotFound';
-export default function ToolDetail(){const {slug}=useParams();const tool=tools.find(t=>t.slug===slug);const [state,setState]=useState(null);if(!tool)return <NotFound/>;const value=state?.slug===slug?state.value:null;const context=new URLSearchParams(window.location.search);const problem=context.get('problem');return <div className="container-page py-10 pb-20"><PageIntro eyebrow={tool.tag} title={tool.fullName} description={tool.description} parent={{name:'Tools',path:'/tools/'}}/>{problem&&<Link to={`/troubleshooting/${encodeURIComponent(problem)}/?${context.toString()}#diagnostic-session`} className="mb-5 inline-flex items-center gap-2 text-sm text-orange-600"><ArrowLeft size={15}/>Return to your diagnosis</Link>}<div className="grid items-start gap-8 lg:grid-cols-[1.4fr_1fr]"><div><ToolForm key={slug} tool={tool} onResult={value=>setState({slug,value})}/>{value&&<div className="mt-6"><ToolResult tool={tool} value={value}/></div>}<section className="mt-8"><h2 className="font-heading text-lg font-bold">How the calculation works</h2><p className="my-4 rounded-lg border border-gray-200 bg-gray-50 p-5 font-mono text-xs leading-6">{tool.formula}</p><p className="body-copy">{tool.how}</p></section></div><aside><div className="panel p-6"><h2 className="text-sm font-bold">Before you begin</h2><p className="body-copy mt-3">{tool.how}</p><div className="mt-6 border-t border-gray-100 pt-5"><h3 className="flex items-center gap-2 text-xs font-bold"><Info size={15} className="text-orange-600"/>Important limitations</h3><p className="mt-3 text-xs leading-6 text-gray-500">{tool.limit}</p></div></div><SourcePanel ids={tool.sources}/><Link to={`/troubleshooting/${tool.problem}/`} className="mt-5 block text-sm font-semibold text-orange-600">Related troubleshooting →</Link></aside></div></div>;}
+import React from 'react';
+import { useParams, Link } from 'react-router-dom';
+import ToolForm from '../components/tools/ToolForm';
+import ToolResult from '../components/tools/ToolResult';
+import { useCatalog } from '../hooks/useCatalog';
+
+export default function ToolDetail() {
+  const { id } = useParams();
+  const { catalog, loading } = useCatalog();
+
+  // Safe checks for tools array
+  const toolsList = Array.isArray(catalog?.tools)
+    ? catalog.tools
+    : Array.isArray(catalog)
+    ? catalog
+    : [];
+
+  // Safe .find call
+  const tool = Array.isArray(toolsList)
+    ? toolsList.find((t) => t?.slug === id || t?.id === id)
+    : null;
+
+  if (loading) {
+    return (
+      <div className="p-8 text-center text-gray-500 font-medium">
+        Loading tool parameters...
+      </div>
+    );
+  }
+
+  if (!tool) {
+    return (
+      <div className="max-w-xl mx-auto my-12 p-6 bg-white rounded-lg shadow-sm border border-gray-200 text-center space-y-4">
+        <h2 className="text-xl font-bold text-gray-800">Tool Not Found</h2>
+        <p className="text-sm text-gray-600">
+          The requested calibration tool could not be found or loaded.
+        </p>
+        <Link
+          to="/tools"
+          className="inline-block px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded hover:bg-blue-700 transition-colors"
+        >
+          Back to Tools List
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
+      <Link
+        to="/tools"
+        className="text-sm text-blue-600 hover:underline inline-flex items-center gap-1 font-medium"
+      >
+        &larr; Back to Tools
+      </Link>
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">{tool.name}</h1>
+        {tool.description && (
+          <p className="text-gray-600 mt-1">{tool.description}</p>
+        )}
+      </div>
+
+      <ToolForm tool={tool} />
+    </div>
+  );
+}
