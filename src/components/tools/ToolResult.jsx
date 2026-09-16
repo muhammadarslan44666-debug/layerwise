@@ -1,4 +1,63 @@
-import { Link } from 'react-router-dom';
-import { Download, CheckCircle2, ArrowRight } from 'lucide-react';
-import { downloadReport } from '@/components/tools/calculations';
-export default function ToolResult({tool,value}){const {result,inputs}=value;return <section className="rounded-xl border border-orange-200 bg-[#fff8f3] p-6 md:p-8" aria-live="polite" data-testid="tool-result"><span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-orange-600"><CheckCircle2 size={14}/>{result.type}</span><h2 className="my-4 font-heading text-2xl font-bold">{result.headline}</h2><p className="text-sm leading-6 text-gray-600">{result.text}</p>{result.rows.length>0&&<dl className="mt-5 max-h-72 overflow-auto rounded-lg border border-orange-100 bg-white">{result.rows.map(([label,val])=><div className="flex justify-between gap-5 border-b border-orange-50 px-4 py-3 text-xs last:border-b-0" key={label}><dt className="text-gray-500">{label}</dt><dd className="text-right font-mono font-semibold">{val}</dd></div>)}</dl>}<h3 className="mt-6 text-sm font-bold">What the result means</h3><p className="mt-2 text-sm leading-6 text-gray-600">{tool.meaning}</p><div className="mt-5 flex flex-wrap gap-3"><button className="button-secondary !bg-white !text-xs" onClick={()=>downloadReport(`layerwise-${tool.slug}.json`,{tool:tool.fullName,date:new Date().toISOString(),provenance:'User-entered inputs; calculated or observation-based result. Not verified settings.',inputs,result,limitations:tool.limit})}><Download size={14}/>Download result</button><Link className="inline-flex items-center gap-2 text-xs font-semibold text-orange-700" to={`/tools/${tool.next}/`}>Related calibration step<ArrowRight size={14}/></Link></div></section>;}
+import React from 'react';
+
+export default function ToolResult({ result, tool }) {
+  if (!result) return null;
+
+  // Safe checks for arrays
+  const steps = Array.isArray(result.steps) ? result.steps : [];
+  const warnings = Array.isArray(result.warnings) ? result.warnings : [];
+
+  return (
+    <div className="mt-6 p-4 border rounded-lg bg-gray-50 space-y-4">
+      <h4 className="text-lg font-bold text-gray-800">
+        Results: {tool?.name || ''}
+      </h4>
+
+      {result.summary && (
+        <div className="p-3 bg-white rounded border border-gray-200">
+          <p className="text-sm font-medium text-gray-900">{result.summary}</p>
+        </div>
+      )}
+
+      {/* Numerical or Key-Value Outputs */}
+      {result.values && typeof result.values === 'object' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {Object.entries(result.values).map(([key, val]) => (
+            <div key={key} className="p-3 bg-white rounded border shadow-sm">
+              <span className="text-xs text-gray-500 uppercase font-semibold block">
+                {key.replace(/_/g, ' ')}
+              </span>
+              <span className="text-base font-bold text-blue-600">
+                {String(val)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Warnings List */}
+      {warnings.length > 0 && (
+        <div className="p-3 bg-amber-50 border border-amber-200 rounded text-amber-800 text-sm space-y-1">
+          <strong className="block font-semibold">Warnings:</strong>
+          <ul className="list-disc list-inside space-y-1">
+            {warnings.map((warn, i) => (
+              <li key={i}>{warn}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Recommended Steps */}
+      {steps.length > 0 && (
+        <div className="space-y-2">
+          <h5 className="text-sm font-semibold text-gray-700">Next Steps:</h5>
+          <ol className="list-decimal list-inside space-y-1 text-sm text-gray-600">
+            {steps.map((step, idx) => (
+              <li key={idx}>{step}</li>
+            ))}
+          </ol>
+        </div>
+      )}
+    </div>
+  );
+}

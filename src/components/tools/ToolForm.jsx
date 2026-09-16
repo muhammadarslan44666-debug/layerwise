@@ -1,4 +1,69 @@
-import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
-import { calculate } from '@/components/tools/calculations';
-export default function ToolForm({tool,onResult}){const [values,setValues]=useState({...(tool.slug==='flow-rate'?{method:'two-pass'}:{}),...(tool.slug==='z-offset'?{observation:''}:{}),...Object.fromEntries(tool.fields.map(f=>[f.key,'']))});const [error,setError]=useState('');const set=(key,value)=>{setValues(v=>({...v,[key]:value}));onResult(null);setError('');};function submit(e){e.preventDefault();try{const result=calculate(tool.slug,values);setError('');onResult({result,inputs:values});}catch(e){setError(e.message);onResult(null);}}return <form onSubmit={submit} className="panel p-6 md:p-8"><div className="mb-6 flex items-center justify-between"><h2 className="font-heading text-lg font-bold">{tool.fields.length?'Your test inputs':'What do you see?'}</h2><span className="rounded bg-gray-100 px-2 py-1 text-[9px] font-semibold text-gray-500">USER-ENTERED</span></div>{tool.slug==='flow-rate'&&<label className="mb-5 block text-xs font-semibold">Calibration method<select className="field mt-2" value={values.method} onChange={e=>set('method',e.target.value)}><option value="two-pass">OrcaSlicer legacy 2-pass (%)</option><option value="yolo">OrcaSlicer YOLO (additive)</option></select></label>}{tool.slug==='z-offset'?<fieldset className="space-y-3"><legend className="sr-only">First-layer observation</legend>{[['gaps','Round lines with gaps','The lines do not connect into a surface.'],['ridges','Ridges or very thin smears','Material piles up or looks overly squished.'],['even','Even, connected surface','Lines join without ridges or gaps.']].map(([value,label,description])=><label key={value} className={`flex cursor-pointer items-start gap-3 rounded-lg border p-4 ${values.observation===value?'border-orange-300 bg-orange-50':'border-gray-200'}`}><input required type="radio" className="mt-1 accent-orange-600" name="observation" value={value} checked={values.observation===value} onChange={()=>set('observation',value)}/><span><span className="block text-sm font-semibold">{label}</span><span className="mt-1 block text-xs text-gray-500">{description}</span></span></label>)}</fieldset>:<div className="grid gap-5 sm:grid-cols-2">{tool.fields.map(f=><label className="block text-xs font-semibold" key={f.key}>{f.label}<input name={f.key} className="field mt-2" required type="number" step="any" min={f.min} value={values[f.key]} onChange={e=>set(f.key,e.target.value)} placeholder="Enter your value"/></label>)}</div>}{tool.tag==='TEST PLANNER'&&<label className="mt-5 flex items-start gap-3 text-xs leading-5 text-gray-500"><input required type="checkbox" className="mt-1 accent-orange-600"/>I have checked these values against my printer and filament documentation.</label>}{error&&<p className="mt-4 text-sm text-red-600" role="alert">{error}</p>}<button type="submit" className="button-primary mt-6 w-full">{tool.button}<ArrowRight size={16}/></button><p className="mt-4 text-[11px] leading-5 text-gray-400">No universal settings are filled in. Your inputs stay in this page until you leave or download your result.</p></form>;}
+import React from 'react';
+
+export default function ToolForm({ tool, formData = {}, onChange, onSubmit }) {
+  if (!tool) return null;
+
+  // Safe checks for fields array
+  const fields = Array.isArray(tool.fields) ? tool.fields : [];
+
+  return (
+    <form onSubmit={onSubmit} className="space-y-4">
+      <h3 className="text-xl font-bold mb-2">{tool.name || 'Tool Inputs'}</h3>
+      {fields.length === 0 ? (
+        <p className="text-gray-500">No inputs required for this tool.</p>
+      ) : (
+        fields.map((field) => {
+          if (!field || !field.key) return null;
+          
+          return (
+            <div key={field.key} className="flex flex-col space-y-1">
+              <label htmlFor={field.key} className="text-sm font-medium text-gray-700">
+                {field.label || field.key}
+              </label>
+              
+              {field.type === 'select' ? (
+                <select
+                  id={field.key}
+                  name={field.key}
+                  value={formData[field.key] ?? field.defaultValue ?? ''}
+                  onChange={(e) => onChange(field.key, e.target.value)}
+                  className="p-2 border rounded-md w-full bg-white"
+                >
+                  {Array.isArray(field.options) &&
+                    field.options.map((opt, idx) => (
+                      <option key={idx} value={opt?.value ?? opt}>
+                        {opt?.label ?? opt}
+                      </option>
+                    ))}
+                </select>
+              ) : (
+                <input
+                  type={field.type || 'number'}
+                  id={field.key}
+                  name={field.key}
+                  step={field.step || 'any'}
+                  min={field.min}
+                  max={field.max}
+                  value={formData[field.key] ?? field.defaultValue ?? ''}
+                  onChange={(e) => onChange(field.key, e.target.value)}
+                  className="p-2 border rounded-md w-full"
+                  placeholder={field.placeholder || ''}
+                />
+              )}
+              {field.description && (
+                <span className="text-xs text-gray-500">{field.description}</span>
+              )}
+            </div>
+          );
+        })
+      )}
+
+      <button
+        type="submit"
+        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors w-full font-semibold"
+      >
+        Calculate Result
+      </button>
+    </form>
+  );
+}
