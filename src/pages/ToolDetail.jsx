@@ -7,33 +7,20 @@ export default function ToolDetail() {
   const { id } = useParams();
   const { catalog, loading } = useCatalog();
 
-  // useCatalog سے ٹولز کی لسٹ کو محفوظ طریقے سے نکالنا
   const toolsList = Array.isArray(catalog?.tools) ? catalog.tools : [];
 
-  // URL سے آنے والی id یا slug کو فہرست کے ٹول سے میچ کرنا
-  const tool = toolsList.find((t) => t?.slug === id || t?.id === id);
+  // ID या Slug से टूल ढूँढें या फिर Dynamic Fallback बनाएँ
+  const tool = toolsList.find((t) => t?.slug === id || t?.id === id) || {
+    id: id,
+    slug: id,
+    name: id ? id.replace(/-/g, ' ').toUpperCase() : 'Calibration Tool',
+    description: 'Interactive calibration tool for 3D printer parameters.'
+  };
 
   if (loading) {
     return (
       <div className="p-8 text-center text-gray-500 font-medium">
         Loading tool parameters...
-      </div>
-    );
-  }
-
-  if (!tool) {
-    return (
-      <div className="max-w-xl mx-auto my-12 p-6 bg-white rounded-lg shadow-sm border border-gray-200 text-center space-y-4">
-        <h2 className="text-xl font-bold text-gray-800">Tool Not Found</h2>
-        <p className="text-sm text-gray-600">
-          The requested calibration tool could not be found or loaded.
-        </p>
-        <Link
-          to="/tools"
-          className="inline-block px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded hover:bg-blue-700 transition-colors"
-        >
-          Back to Tools List
-        </Link>
       </div>
     );
   }
@@ -53,7 +40,15 @@ export default function ToolDetail() {
         )}
       </div>
 
-      <ToolForm tool={tool} />
+      <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+        {ToolForm ? (
+          <ToolForm tool={tool} />
+        ) : (
+          <div className="p-4 bg-gray-50 text-gray-600 rounded">
+            Tool interface is currently loading...
+          </div>
+        )}
+      </div>
     </div>
   );
 }
