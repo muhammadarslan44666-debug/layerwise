@@ -4,16 +4,16 @@ import { useCatalog } from '../hooks/useCatalog';
 
 export default function ProblemDetail() {
   const { id } = useParams();
-  const { catalog, loading } = useCatalog();
+  const catalogData = useCatalog ? useCatalog() : {};
+  const catalog = catalogData?.catalog || catalogData;
+  const loading = catalogData?.loading || false;
 
-  // Safe checks for problems array
   const problemsList = Array.isArray(catalog?.problems)
     ? catalog.problems
     : Array.isArray(catalog)
     ? catalog
     : [];
 
-  // Safe .find call
   const problem = Array.isArray(problemsList)
     ? problemsList.find((p) => p?.slug === id || p?.id === id)
     : null;

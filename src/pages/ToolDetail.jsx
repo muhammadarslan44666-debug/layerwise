@@ -6,16 +6,16 @@ import { useCatalog } from '../hooks/useCatalog';
 
 export default function ToolDetail() {
   const { id } = useParams();
-  const { catalog, loading } = useCatalog();
+  const catalogData = useCatalog ? useCatalog() : {};
+  const catalog = catalogData?.catalog || catalogData;
+  const loading = catalogData?.loading || false;
 
-  // Safe checks for tools array
   const toolsList = Array.isArray(catalog?.tools)
     ? catalog.tools
     : Array.isArray(catalog)
     ? catalog
     : [];
 
-  // Safe .find call
   const tool = Array.isArray(toolsList)
     ? toolsList.find((t) => t?.slug === id || t?.id === id)
     : null;
