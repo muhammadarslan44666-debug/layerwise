@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-// सैंपल टूल्स और ट्रबलशूटिंग डेटा
 const sampleCatalog = {
   tools: [
     {
@@ -19,10 +18,19 @@ const sampleCatalog = {
       id: 'pressure-advance',
       slug: 'pressure-advance',
       name: 'Pressure Advance / Pressure Control',
-      description: 'Optimize corner sharpest and reduce bulging on acceleration changes.'
+      description: 'Optimize corner sharpness and reduce bulging on acceleration changes.'
     }
   ],
   problems: [
+    {
+      id: 'surface-quality',
+      slug: 'surface-quality',
+      name: 'Surface Quality Issues',
+      title: 'Surface Quality Issues',
+      description: 'Troubleshoot blobbing, stringing, scarring, and rough top or side layers.',
+      symptoms: ['Rough surface finish', 'Visible blobbing or stringing on prints'],
+      solutions: [{ title: 'Calibrate Retraction & Temp', description: 'Adjust retraction distance, speed, and printing temperature.' }]
+    },
     {
       id: 'layer-shifting',
       slug: 'layer-shifting',
@@ -49,7 +57,6 @@ export function useCatalog() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // डेटा लोड सेट करें
     setCatalog(sampleCatalog);
   }, []);
 
