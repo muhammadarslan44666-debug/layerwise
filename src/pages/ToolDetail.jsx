@@ -1,24 +1,17 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ToolForm from '../components/tools/ToolForm';
-import ToolResult from '../components/tools/ToolResult';
 import { useCatalog } from '../hooks/useCatalog';
 
 export default function ToolDetail() {
   const { id } = useParams();
-  const catalogData = useCatalog ? useCatalog() : {};
-  const catalog = catalogData?.catalog || catalogData;
-  const loading = catalogData?.loading || false;
+  const { catalog, loading } = useCatalog();
 
-  const toolsList = Array.isArray(catalog?.tools)
-    ? catalog.tools
-    : Array.isArray(catalog)
-    ? catalog
-    : [];
+  // useCatalog سے ٹولز کی لسٹ کو محفوظ طریقے سے نکالنا
+  const toolsList = Array.isArray(catalog?.tools) ? catalog.tools : [];
 
-  const tool = Array.isArray(toolsList)
-    ? toolsList.find((t) => t?.slug === id || t?.id === id)
-    : null;
+  // URL سے آنے والی id یا slug کو فہرست کے ٹول سے میچ کرنا
+  const tool = toolsList.find((t) => t?.slug === id || t?.id === id);
 
   if (loading) {
     return (
