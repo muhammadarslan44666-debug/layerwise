@@ -1,0 +1,4 @@
+import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
+import Icon from '@/components/shared/Icon';
+export default function ProblemCard({problem}){return <Link to={`/troubleshooting/${problem.slug}/`} className="group panel relative flex min-h-[136px] flex-col p-5 transition-all hover:border-orange-300 hover:shadow-sm"><div className="mb-4 flex items-center justify-between"><Icon name={problem.icon} size={26} strokeWidth={1.55} className="text-gray-600 transition-colors group-hover:text-orange-600"/><ArrowUpRight size={14} className="text-gray-300 group-hover:text-orange-500"/></div><h3 className="text-[13px] font-bold">{problem.name}</h3><p className="mt-1.5 text-[11px] leading-5 text-gray-500">{problem.short}</p></Link>;}

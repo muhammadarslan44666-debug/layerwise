@@ -1,0 +1,4 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search } from 'lucide-react';
+export default function SearchBox({compact=false,initial=''}){const [q,setQ]=useState(initial);const navigate=useNavigate();return <form role="search" onSubmit={e=>{e.preventDefault();if(q.trim())navigate(`/search/?q=${encodeURIComponent(q.trim())}`);}} className={`flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 ${compact?'px-3 py-2':'px-4 py-3'}`}><Search size={compact?15:19} className="shrink-0 text-gray-400"/><input aria-label="Search printers, problems and tools" value={q} onChange={e=>setQ(e.target.value)} className={`min-w-0 flex-1 bg-transparent outline-none ${compact?'w-28 text-xs':'text-sm'}`} placeholder={compact?'Search anything…':'Try “K1 PETG stringing” or “A1 flow calibration”'}/>{!compact&&<button className="text-sm font-semibold text-orange-600" type="submit">Search</button>}</form>;}
